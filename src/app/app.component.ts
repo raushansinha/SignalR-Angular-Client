@@ -20,6 +20,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.toastr.success(message, 'Success!');
   }
 
+  showWarning(message: string) {
+    this.toastr.warning(message, 'Warning!');
+  }
+
   ngOnInit(): void {
     //this._hubConnection = new HubConnection('http://localhost:1874/notify');
     this._hubConnection = new signalR.HubConnectionBuilder()
@@ -36,6 +40,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.msgs.push({ type: type, payload: payload });
       console.log("Messages: " + JSON.stringify(this.msgs));
       this.showSuccess(payload);
+    });
+
+    this._hubConnection.on('BroadcastWarning', (type: Messageseverity, payload: string) => {
+      this.msgs.push({ type: type, payload: payload });
+      console.log("Messages: " + JSON.stringify(this.msgs));
+      this.showWarning(payload);
     });
   }
 
